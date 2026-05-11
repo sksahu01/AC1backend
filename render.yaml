@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: aerocore-backend
+    env: python
+    region: oregon
+    plan: free
+    pythonVersion: 3.11
+    
+    # Build command
+    buildCommand: pip install -r requirements.txt
+    
+    # Start command - using uvicorn directly (faster than gunicorn for async)
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    
+    # Health check
+    healthCheckPath: /
+    
+    # Environment variables (set these in Render dashboard)
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
