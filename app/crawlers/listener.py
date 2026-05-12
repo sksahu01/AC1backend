@@ -26,9 +26,18 @@ async def start_listeners(smart_crawler_1, smart_crawler_2, smart_crawler_3):
     logger.info("[LISTENER] Starting NOTIFY listeners...")
 
     try:
-        conn_msg = await asyncpg.connect(settings.supabase_db_url)
-        conn_ops = await asyncpg.connect(settings.supabase_db_url)
-        conn_chat = await asyncpg.connect(settings.supabase_db_url)
+        conn_msg = await asyncpg.connect(
+    settings.supabase_db_url,
+    statement_cache_size=0
+)
+        conn_ops = await asyncpg.connect(
+    settings.supabase_db_url,
+    statement_cache_size=0
+)
+        conn_chat = await asyncpg.connect(
+    settings.supabase_db_url,
+    statement_cache_size=0
+)
     except Exception as e:
         logger.error(f"[LISTENER] Failed to connect to database: {e}")
         raise
