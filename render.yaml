@@ -15,7 +15,8 @@ services:
     # Health check
     healthCheckPath: /
     
-    # Environment variables (set these in Render dashboard)
+    # IMPORTANT: All environment variables must be set in Render dashboard
+    # Do NOT commit .env file to git - credentials must be environment-only
     envVars:
       - key: PYTHON_VERSION
         value: 3.11

@@ -1,10 +1,14 @@
 # AEROCORE Backend - Render Deployment Guide
 
+> 🔒 **Security Note**: See `SECURITY_FIX.md` for information about exposed credentials and how to regenerate them.
+
 ## ✅ Pre-Deployment Checklist
 
 - [ ] Requirements.txt has all dependencies (including `pydantic-settings`)
-- [ ] `.env` file is properly configured locally
-- [ ] Git repository is committed and pushed
+- [ ] `.env` file contains ONLY placeholder values (no real credentials)
+- [ ] All real credentials regenerated in Supabase
+- [ ] Git history cleaned (removed exposed `.env` from commits)
+- [ ] Environment variables ready to add to Render dashboard
 - [ ] Render account created at https://render.com
 - [ ] GitHub repository connected to Render
 
@@ -18,7 +22,7 @@ Make sure all changes are committed to git:
 
 ```bash
 git add -A
-git commit -m "Fix: Add pydantic-settings to requirements for Render deployment"
+git commit -m "chore: Security fix - use environment variables, lazy DB initialization"
 git push origin main
 ```
 
@@ -49,32 +53,34 @@ Fill in the following settings:
 
 ⚠️ **CRITICAL**: Add all required environment variables in Render dashboard.
 
+**IMPORTANT**: Do NOT add these from `.env` file - they are placeholders. Use your **NEW regenerated credentials** from Supabase.
+
 Click **"Environment"** and add these variables:
 
 ```
 # === SUPABASE (Database) ===
-SUPABASE_URL=https://addyoururl.supabase.co/rest/v1/
+SUPABASE_URL=https://YOUR_NEW_PROJECT.supabase.co/rest/v1/
 # URL to your Supabase project REST API
 # Get from: Supabase Dashboard → Settings → API
 
-SUPABASE_KEY=your_service_role_key_here
-# Service role key (private - keep secret in production!)
+SUPABASE_KEY=sb_secret_YOUR_NEW_SERVICE_ROLE_KEY
+# Service role key (regenerated - different from old one!)
 # Get from: Supabase Dashboard → Settings → API → Service Role
 
-SUPABASE_DB_URL=postgresql://postgres:[password]@db.yoururl.supabase.co:5432/postgres
+SUPABASE_DB_URL=postgresql://postgres:YOUR_NEW_PASSWORD@db.YOUR_NEW_PROJECT.supabase.co:5432/postgres
 # Direct PostgreSQL connection for asyncpg (LISTEN/NOTIFY)
+# Uses the NEW regenerated database password
 # Format: postgresql://user:password@host:port/dbname
-# PASSWORD is your Supabase password set during project creation
 
 # === AUTHENTICATION ===
 SECRET_KEY=your-jwt-secret-key-min-32-chars
 # Used to sign JWT tokens - CHANGE THIS IN PRODUCTION!
 # Min 32 characters, any random string
 
-# === LLM (Anthropic Claude) ===
-LLM_API_KEY=gemini_api_key_here
-# Get from: console.anthropic.com → API Keys
-# Need active Anthropic account + billing
+# === LLM (Language Model) ===
+LLM_API_KEY=your-new-llm-api-key
+# Get from your LLM provider (Anthropic, Google, etc.)
+# Use the NEW regenerated key
 
 LLM_MODEL=gemini-2.0-flash
 # Claude model name - current options:

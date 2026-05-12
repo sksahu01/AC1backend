@@ -1,9 +1,11 @@
 """
 AEROCORE Backend Configuration
-Load from .env file via python-dotenv
+Load from environment variables or .env file (local development only)
+In production (Render), uses environment variables exclusively
 """
 from pydantic_settings import BaseSettings
 from pydantic import Field
+from pathlib import Path
 
 
 class Settings(BaseSettings):
@@ -30,10 +32,12 @@ class Settings(BaseSettings):
 
     # App
     environment: str = Field(default="development", alias="ENVIRONMENT")
-    debug: bool = Field(default=True, alias="DEBUG")
+    debug: bool = Field(default=False, alias="DEBUG")
 
     class Config:
-        env_file = ".env"
+        # Load from .env only if it exists (local development)
+        # In production (Render), uses environment variables exclusively
+        env_file = ".env" if Path(".env").exists() else None
         case_sensitive = False
 
 
